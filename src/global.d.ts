@@ -12,4 +12,10 @@ export namespace Express {
 
     hasPermission(...permission: string[]): boolean;
   }
+  interface EmailCons {
+    userName: string;
+    userEmail: String;
+    subject: string;
+    text: string;
+  }
 }

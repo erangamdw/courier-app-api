@@ -6,6 +6,7 @@ import { Util } from "../common/utils";
 import User, { userSchema } from "../schemas/userSchemas";
 import { UserLogger } from "../common/loggin";
 import { UserDao } from "../dao/user-dao";
+import { mailService } from "../services/mailer";
 
 export namespace CustomerEp {
   export function registerValidationRules() {
@@ -44,6 +45,12 @@ export namespace CustomerEp {
       User.create(data)
         .then(async (token) => {
           Util.sendSuccess(res, token);
+          mailService({
+            userName: req.body.name,
+            userEmail: req.body.email,
+            subject: "register",
+            text: "regText",
+          });
         })
         .catch(next);
     });
