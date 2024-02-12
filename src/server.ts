@@ -1,7 +1,9 @@
-import express from "express";
+import express, { Router } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { databaseSetup } from "./startup/dbConnection";
+import bodyParser from "body-parser";
+import * as routes from "../src/routes/";
 
 dotenv.config();
 
@@ -10,6 +12,7 @@ const port = process.env.PORT || 8060;
 
 app.use(cors());
 app.use(express.json());
+// app.use(bodyParser.({ extended: true }));
 
 app.use(
   cors({
@@ -35,3 +38,7 @@ databaseSetup()
   .catch((error) => {
     console.log("Invalid database connections", error);
   });
+
+routes.initRoutes(app);
+
+export default app;
