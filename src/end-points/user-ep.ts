@@ -21,23 +21,24 @@ export namespace userEp {
     ];
   };
 
-  export const authenticate = async (
+  export async function authenticate(
     req: Request,
     res: Response,
     next: NextFunction
-  ) => {
+  ) {
     const errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
-      return Util.sendError(res, errors.array()[0]["msg"]);
-    }
+    try {
+      const token = await UserDao.authenticateUser(
+        req.body.email,
+        req.body.password
+      );
 
-    await UserDao.authenticateUser(req.body.email, req.body.password)
-      .then((token: string) => {
-        Util.sendSuccess(res, token);
-      })
-      .catch(next);
-  };
+      return Util.sendSuccess(res, token);
+    } catch (error: any) {
+      return Util.sendError(res, error.message);
+    }
+  }
 
   export async function register(
     req: Request,
@@ -47,7 +48,7 @@ export namespace userEp {
     try {
       await CustomerEp.register(req, res, next);
     } catch (e) {
-      Util.sendError(res, e);
+      return Util.sendError(res, e);
     }
   }
 }

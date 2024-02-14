@@ -19,17 +19,23 @@ export namespace UserDao {
   export const authenticateUser = async (
     email: string,
     password: string
-  ): Promise<string> => {
-    const user = await getUserByEmail(email);
-    if (user) {
+  ): Promise<string | null> => {
+    try {
+      const user = await getUserByEmail(email);
+
+      if (!user) {
+        throw new Error("Email was not found");
+      }
+
       const isMatch = await user.comparePassword(password);
+
       if (!isMatch) {
-        throw UserLogger.log("error", "Incorrect Email and password");
+        throw new Error("Password was not found");
       }
 
       return user.createAccessToken();
-    } else {
-      throw UserLogger.log("error", "User not found in the system!");
+    } catch (error: any) {
+      throw new Error(error.message); // Re-throwing the error message
     }
   };
 }

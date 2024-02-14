@@ -4,7 +4,6 @@ import { IUser, Role } from "../models/userModels";
 import { validationResult } from "express-validator";
 import { Util } from "../common/utils";
 import User, { userSchema } from "../schemas/userSchemas";
-import { UserLogger } from "../common/loggin";
 import { UserDao } from "../dao/user-dao";
 import { mailService } from "../services/mailer";
 
@@ -40,17 +39,18 @@ export namespace CustomerEp {
         name: req.body.name,
         password: req.body.password,
         role: Role.CUSTOMER,
+        permissions: [],
       };
 
       User.create(data)
-        .then(async (token) => {
-          Util.sendSuccess(res, token);
+        .then(async () => {
           mailService({
             userName: req.body.name,
             userEmail: req.body.email,
             subject: "register",
             text: "regText",
           });
+          return Util.sendSuccess(res, "User data created successfully");
         })
         .catch(next);
     });
