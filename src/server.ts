@@ -4,10 +4,13 @@ import dotenv from "dotenv";
 import { databaseSetup } from "./startup/dbConnection";
 import bodyParser from "body-parser";
 import * as routes from "../src/routes/";
+import session from "express-session";
+import { setupSession } from "./middleware/sesseionMiddleware";
 
 dotenv.config();
 
 const app = express();
+
 const port = process.env.PORT || 8060;
 
 app.use(cors());
@@ -25,6 +28,14 @@ app.use(
   })
 );
 
+// app.use(
+//   session({
+//     secret: "fjhdgfjhdgf@2312334$#@$21ASsad",
+//     resave: false,
+//     saveUninitialized: true,
+//     cookie: { secure: false },
+//   })
+// );
 databaseSetup()
   .then(() => {
     try {

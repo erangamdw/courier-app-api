@@ -37,7 +37,7 @@ export const mailService = async ({
         intro:
           text === "regText"
             ? `${userName}  WELLCOME TO DELIVERY COURIER SERIVCE`
-            : `${userName}  WELLCOME TO DELIVERY COURIER SERIVCE `,
+            : ` WELLCOME TO DELIVERY COURIER SERIVCE `,
         outro: text === "regText" ? "Dont Reply to this email" : `${text}  `,
       },
     };
